@@ -18,4 +18,4 @@ steps:
       environment: "$(env)"
       working_dir: "$(Build.SourcesDirectory)/Common/infra"
       serviceconn_name : "Terraform_ServiceConnection"
-      project_name : "Project_Sample"          
+      project_name : "$(project)"          
