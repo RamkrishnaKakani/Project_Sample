@@ -17,6 +17,8 @@ stages:
     displayName: "Terraform"
     jobs:
       - job: terraform_provisioning
+        pool:
+          vmImage: 'ubuntu-latest'
         displayName: "Deploy resources - Terraform"
         timeoutInMinutes: 180
 
