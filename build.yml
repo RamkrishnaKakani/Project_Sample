@@ -1,9 +1,6 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
@@ -33,7 +30,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish zip file
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\build\zip\'
+    PathtoPublish: '$(Build.SourcesDirectory)\build\'
     ArtifactName: 'drop'
     publishLocation: 'Container'
   condition: or(contains(variables['build.sourceBranch'], 'refs/heads/master'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
