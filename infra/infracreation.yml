@@ -13,7 +13,7 @@ steps:
 - checkout: self
 - checkout: CMTeam
 
-- template: Template/terraform_deploy.yml
+- template: $(Build.SourcesDirectory)/CMTeam/infra/Template/terraform_deploy.yml
   parameters:
     environment: "$(env)"
     working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
