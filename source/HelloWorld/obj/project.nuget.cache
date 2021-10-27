@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "Lnn4oUGh1vctcyj0Q4Yi7Suj/8rtEtCFi63qJmpJCJoi7G3Gn21C/7m7jOTlMf7UPLssUAlieqV2ZxMHRNDPcA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\R888066\\source\\repos\\HelloWorld\\HelloWorld\\HelloWorld.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\R888066\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.18\\microsoft.netcore.app.host.win-x64.3.1.18.nupkg.sha512"
+  ],
+  "logs": []
+}
