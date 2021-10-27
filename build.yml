@@ -25,7 +25,7 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: $(solution)
-    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\${{parameters.zipName}} -v d'
+    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\Project_Sample -v d'
     modifyOutputPath: false
     zipAfterPublish: true
     workingDirectory: '$(Build.SourcesDirectory)'
