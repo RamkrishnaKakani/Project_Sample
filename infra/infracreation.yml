@@ -1,8 +1,21 @@
-trigger:
-- none
+trigger: none
+pr: none
 
-pool:
-  vmImage: 'windows-latest'
+resources:
+  repositories:
+    - repository: Common
+      type : github
+      endpoint: MyGithubServiceConnection
+      name: RamkrishnaKakani/CMTeam
+      ref : master
 
-variables:
-  solution: '**/HelloWorld.sln'
+steps:
+- checkout: self
+- checkout: Common
+
+- template: $(Build.SourcesDirectory)\Common\infra\Template\terraform_deploy.yml
+  parameters:
+      environment: "$(env)"
+      working_dir: "$(Build.SourcesDirectory)/Common/infra"
+      serviceconn_name : "Terraform_ServiceConnection"
+      project_name : "Project_Sample"          
