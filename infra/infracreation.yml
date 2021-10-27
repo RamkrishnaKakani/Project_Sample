@@ -51,7 +51,7 @@ stages:
       
         - task: TerraformCLI@0
           displayName: "terraform init"
-          enabled: false
+          enabled: true
           inputs:
             command: "init"
             backendServiceArm: "Terraform_ServiceConnection"
