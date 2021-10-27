@@ -11,14 +11,6 @@ parameters:
   - name: project_name
     type: string
     
-resources:
-  repositories:
-    - repository: CMTeam
-      type : github
-      endpoint: MyGithubServiceConnection
-      name: RamkrishnaKakani/CMTeam
-      ref : master
-
 stages:
   - stage: Terraform
     displayName: "Terraform"
@@ -28,10 +20,7 @@ stages:
           vmImage: 'ubuntu-latest'
         displayName: "Deploy resources - Terraform"
         timeoutInMinutes: 180
-        steps:
-          - checkout: self
-          - checkout: CMTeam
-          
+        steps:                  
           - task: AzureCLI@2
             displayName: "Dymanic JSON Creation"
             inputs:
