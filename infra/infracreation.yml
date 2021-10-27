@@ -9,13 +9,20 @@ resources:
       name: RamkrishnaKakani/CMTeam
       ref : master
 
-steps:
-- checkout: self
-- checkout: Common
+stages:
+  - stage: Infra_Import
+    displayName: Import Others
+    jobs:
+      - job: Compile_Publish_job
+        pool:
+          name: AllscriptsVS2019
+        steps:
+        - checkout: self
+        - checkout: Common
 
-- template: ..\infra\Template\terraform_deploy.yml
-  parameters:
+  - template: ..\infra\Template\terraform_deploy.yml
+    parameters:
       environment: "$(env)"
-      working_dir: "$(Build.SourcesDirectory)/Common/infra"
+      working_dir: "$(Build.SourcesDirectory)"
       serviceconn_name : "Terraform_ServiceConnection"
       project_name : "$(project)"          
