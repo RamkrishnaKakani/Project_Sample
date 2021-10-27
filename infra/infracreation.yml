@@ -13,6 +13,6 @@ stages:
   - template: ..\infra\Template\terraform_deploy.yml
     parameters:
       environment: "$(env)"
-      working_dir: "$(Build.SourcesDirectory)"
+      working_dir: "$(Build.SourcesDirectory)/CMTeam/Infra"
       serviceconn_name : "Terraform_ServiceConnection"
       project_name : "$(project)"          
