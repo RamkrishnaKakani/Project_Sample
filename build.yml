@@ -7,8 +7,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: NuGetToolInstaller@1
-
 - task: NuGetCommand@2
   displayName: 'Run Nuget Restore'
   inputs:
@@ -16,11 +14,11 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  enabled: false
+  enabled: true
   displayName: Publish - $(solution)
   inputs:
     command: 'publish'
-    publishWebProjects: false
+    publishWebProjects: true
     projects: $(solution)
     arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\Project_Sample -v d'
     modifyOutputPath: false
@@ -30,7 +28,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Publish zip file
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\build\'
+    PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
     ArtifactName: 'drop'
     publishLocation: 'Container'
   condition: or(contains(variables['build.sourceBranch'], 'refs/heads/master'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
