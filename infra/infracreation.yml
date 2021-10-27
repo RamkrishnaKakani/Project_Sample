@@ -10,14 +10,6 @@ resources:
       ref : master
 
 stages:
-  - stage: Infra_Import
-    displayName: Import Others
-    jobs:
-      - job: Compile_Publish_job
-        steps:
-        - checkout: self
-        - checkout: CMTeam
-
   - template: ..\infra\Template\terraform_deploy.yml
     parameters:
       environment: "$(env)"
