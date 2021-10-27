@@ -1,10 +1,8 @@
 trigger:
-- master
+- none
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  solution: '**/HelloWorld.sln'
 
 steps:
 - task: NuGetCommand@2
@@ -14,8 +12,7 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  enabled: true
-  displayName: Publish - $(solution)
+  displayName: Publish Solution
   inputs:
     command: 'publish'
     publishWebProjects: true
@@ -31,16 +28,3 @@ steps:
     PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-  condition: or(contains(variables['build.sourceBranch'], 'refs/heads/master'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
-
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
