@@ -15,7 +15,7 @@ stages:
     jobs:
       - job: Infra_Creation
         steps:
-        - checkout: self
+        #- checkout: self
         #- checkout: CMTeam
         - task: AzureCLI@2
           displayName: "Dymanic JSON Creation"
