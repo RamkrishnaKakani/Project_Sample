@@ -1,0 +1,43 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  displayName: 'Run Nuget Restore'
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(solution)'
+
+- task: DotNetCoreCLI@2
+  enabled: false
+  displayName: Publish - ${{parameters.solutionName}}
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**\${{parameters.solutionName}}'
+    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\Build\zip\${{parameters.zipName}} -v d'
+    modifyOutputPath: false
+    zipAfterPublish: true
+    workingDirectory: '$(Build.SourcesDirectory)\${{parameters.projectSearchPath}}'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
