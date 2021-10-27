@@ -14,8 +14,6 @@ stages:
     displayName: Import Others
     jobs:
       - job: Compile_Publish_job
-        pool:
-          name: AllscriptsVS2019
         steps:
         - checkout: self
         - checkout: Common
