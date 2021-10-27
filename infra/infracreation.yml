@@ -12,4 +12,11 @@ resources:
 steps:
 - checkout: self
 - checkout: CMTeam
+
+- template: Template/terraform_deploy.yml
+  parameters:
+    environment: "$(env)"
+    working_dir: "$(Build.SourcesDirectory)/Project_Sample/infra"
+    serviceconn_name : "Terraform_ServiceConnection"
+    project_name : "$(project)" 
  
