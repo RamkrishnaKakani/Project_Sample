@@ -1,10 +1,15 @@
 trigger:
 - none
 
+pool:
+  vmImage: 'windows-latest'
+
 variables:
   solution: '**/HelloWorld.sln'
 
 steps:
+- task: NuGetToolInstaller@1
+
 - task: NuGetCommand@2
   displayName: 'Run Nuget Restore'
   inputs:
