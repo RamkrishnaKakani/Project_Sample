@@ -30,6 +30,14 @@ steps:
     zipAfterPublish: true
     workingDirectory: '$(Build.SourcesDirectory)'
 
+- task: PublishBuildArtifacts@1
+  displayName: Publish zip file
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)\build\zip\'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  condition: or(contains(variables['build.sourceBranch'], 'refs/heads/main'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
