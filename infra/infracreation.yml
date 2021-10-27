@@ -25,7 +25,7 @@ stages:
             scriptLocation: 'inlineScript'
             inlineScript: |
               $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
-              $fileName = "terraform.tfvars.json"                
+              $fileName = "$(env:Build_SourcesDirectory)\infra\terraform.tfvars.json"                
               $data = @{}
               $apps = @{}
               $app = @{}
@@ -47,11 +47,11 @@ stages:
           displayName: "Display JSON"
           inputs:
             targetType: 'inline'
-            script: 'get-content $(Build.SourcesDirectory)\terraform.tfvars.json' 
+            script: 'get-content $(Build.SourcesDirectory)\infra\terraform.tfvars.json' 
       
         - task: TerraformCLI@0
           displayName: "terraform init"
-          enabled: true
+          enabled: false
           inputs:
             command: "init"
             backendServiceArm: "Terraform_ServiceConnection"
@@ -60,7 +60,7 @@ stages:
         
         - task: TerraformCLI@0
           displayName: "terraform plan"
-          enabled: true
+          enabled: false
           inputs:
             command: 'plan'
             workingDirectory: '$(Build.SourcesDirectory)\infra'
