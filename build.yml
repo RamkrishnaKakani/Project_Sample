@@ -20,15 +20,15 @@ steps:
 
 - task: DotNetCoreCLI@2
   enabled: false
-  displayName: Publish - ${{parameters.solutionName}}
+  displayName: Publish - $(solution)
   inputs:
     command: 'publish'
     publishWebProjects: false
-    projects: '**\${{parameters.solutionName}}'
-    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\Build\zip\${{parameters.zipName}} -v d'
+    projects: $(solution)
+    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\${{parameters.zipName}} -v d'
     modifyOutputPath: false
     zipAfterPublish: true
-    workingDirectory: '$(Build.SourcesDirectory)\${{parameters.projectSearchPath}}'
+    workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: VSBuild@1
   inputs:
