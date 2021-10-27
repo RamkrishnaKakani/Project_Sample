@@ -10,92 +10,78 @@ parameters:
 
   - name: project_name
     type: string
-    
-stages:
-  - stage: Terraform
-    displayName: "Terraform"
-    jobs:
-      - job: terraform_provisioning
-        pool:
-          vmImage: 'ubuntu-latest'
-        displayName: "Deploy resources - Terraform"
-        timeoutInMinutes: 180
-        steps:                  
-          - task: AzureCLI@2
-            displayName: "Dymanic JSON Creation"
-            inputs:
-              azureSubscription: 'Terraform_ServiceConnection'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
-                $fileName = "terraform.tfvars.json"                
-                $data = @{}
-                $apps = @{}
-                $app = @{}
+
+steps:
+- task: AzureCLI@2
+  displayName: "Dymanic JSON Creation"
+  inputs:
+    azureSubscription: 'Terraform_ServiceConnection'
+    scriptType: 'pscore'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
+      $fileName = "${{ parameters.working_dir }}\terraform.tfvars.json"                
+      $data = @{}
+      $apps = @{}
+      $app = @{}
                 
-                $app.Add("app_name","$(project)")
-                $app.Add("version","$(version)")
-                $apps.Add("app",$app)
+      $app.Add("app_name","$(project)")
+      $app.Add("version","$(version)")
+      $apps.Add("app",$app)
 
-                $data.Add("id", $appPlan.id )
-                $data.Add("resourceGroup", $appPlan.resourceGroup )
-                $data.Add("location", $appPlan.location.replace(' ','') )
-                $data.Add("tags", $appPlan.tags)
-                $data.Add("env", "$(env)")
-                $data.Add("apps", $apps)
+      $data.Add("id", $appPlan.id )
+      $data.Add("resourceGroup", $appPlan.resourceGroup )
+      $data.Add("location", $appPlan.location.replace(' ','') )
+      $data.Add("tags", $appPlan.tags)
+      $data.Add("env", "$(env)")
+      $data.Add("apps", $apps)
 
-                $data | ConvertTo-Json | set-content -Path $fileName
-              addSpnToEnvironment: true
-              useGlobalConfig: true
+      $data | ConvertTo-Json | set-content -Path $fileName
+    addSpnToEnvironment: true
+    useGlobalConfig: true
         
-          - task: PowerShell@2
-            displayName: "Display JSON"
-            inputs:
-              targetType: 'inline'
-              script: 'get-content $(Build.SourcesDirectory)\terraform.tfvars.json' 
+- task: PowerShell@2
+  displayName: "Display JSON"
+  inputs:
+    targetType: 'inline'
+    script: 'get-content ${{ parameters.working_dir }}/terraform.tfvars.json' 
         
-          - task: TerraformCLI@0
-            displayName: "terraform init"
-            enabled: true
-            inputs:
-              command: "init"
-              backendServiceArm: ${{ parameters.serviceconn_name }}
-              #backendType: "azurerm"
-              #backendAzureRmResourceGroupName: ${{ parameters.tfresourcegroupname }}
-              #backendAzureRmStorageAccountName: ${{ parameters.tfstorageaccountname }}
-              #backendAzureRmContainerName: ${{ parameters.azureRmContainerName }}
-              #backendAzureRmKey: ${{ parameters.tfstatefile }}
-              allowTelemetryCollection: true
-              workingDirectory: ${{ parameters.working_dir }}          
+- task: TerraformCLI@0
+  displayName: "terraform init"
+  enabled: true
+  inputs:
+    command: "init"
+    backendServiceArm: ${{ parameters.serviceconn_name }}
+    allowTelemetryCollection: true
+    workingDirectory: ${{ parameters.working_dir }}          
          
-          - task: TerraformCLI@0
-            displayName: "terraform plan"
-            enabled: true
-            inputs:
-              command: 'plan'
-              workingDirectory: '${{ parameters.working_dir }}'
-              environmentServiceName: ${{ parameters.serviceconn_name }}
-              commandOptions: '-out=tfplan'
-              allowTelemetryCollection: true
+- task: TerraformCLI@0
+  displayName: "terraform plan"
+  enabled: true
+  inputs:
+    command: 'plan'
+    workingDirectory: '${{ parameters.working_dir }}'
+    environmentServiceName: ${{ parameters.serviceconn_name }}
+    commandOptions: '-out=tfplan'
+    allowTelemetryCollection: true
 
-          - task: TerraformCLI@0
-            displayName: "terraform apply"
-            enabled: True  
-            inputs:
-              command: 'apply'
-              workingDirectory: '${{ parameters.working_dir }}'
-              environmentServiceName: ${{ parameters.serviceconn_name }}
-              commandOptions: 'tfplan'
-              allowTelemetryCollection: true
-            condition: and(succeeded(), eq(variables['TerraformApply'], 'True'))
+- task: TerraformCLI@0
+  displayName: "terraform apply"
+  enabled: True  
+  inputs:
+    command: 'apply'
+    workingDirectory: '${{ parameters.working_dir }}'
+    environmentServiceName: ${{ parameters.serviceconn_name }}
+    commandOptions: 'tfplan'
+    allowTelemetryCollection: true
+  condition: and(succeeded(), eq(variables['TerraformApply'], 'True'))
 
-          - task: TerraformCLI@0
-            displayName: "terraform destroy"
-            enabled: True
-            inputs:
-              command: 'destroy'
-              workingDirectory: '${{ parameters.working_dir }}'
-              environmentServiceName: ${{ parameters.serviceconn_name }}
-              allowTelemetryCollection: true
-            condition: and(succeeded(), eq(variables['TerraformDestroy'], 'True'))
+- task: TerraformCLI@0
+  displayName: "terraform destroy"
+  enabled: True
+  inputs:
+    command: 'destroy'
+    workingDirectory: '${{ parameters.working_dir }}'
+    environmentServiceName: ${{ parameters.serviceconn_name }}
+    allowTelemetryCollection: true
+  condition: and(succeeded(), eq(variables['TerraformDestroy'], 'True'))
