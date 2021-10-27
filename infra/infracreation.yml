@@ -10,17 +10,81 @@ resources:
       ref : master
 
 stages:
-  - stage: Infra_Import
-    displayName: Import Others
+  - stage: Infra
+    displayName: Infrastructure
     jobs:
-      - job: Import_Others
+      - job: Infra_Creation
         steps:
         - checkout: self
         - checkout: CMTeam
+        - task: AzureCLI@2
+          displayName: "Dymanic JSON Creation"
+          inputs:
+            azureSubscription: 'Terraform_ServiceConnection'
+            scriptType: 'pscore'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
+              $fileName = "terraform.tfvars.json"                
+              $data = @{}
+              $apps = @{}
+              $app = @{}
+              
+              $app.Add("app_name","$(project)")
+              $app.Add("version","$(version)")
+              $apps.Add("app",$app)
+              $data.Add("id", $appPlan.id )
+              $data.Add("resourceGroup", $appPlan.resourceGroup )
+              $data.Add("location", $appPlan.location.replace(' ','') )
+              $data.Add("tags", $appPlan.tags)
+              $data.Add("env", "$(env)")
+              $data.Add("apps", $apps)
+              $data | ConvertTo-Json | set-content -Path $fileName
+            addSpnToEnvironment: true
+            useGlobalConfig: true
+      
+        - task: PowerShell@2
+          displayName: "Display JSON"
+          inputs:
+            targetType: 'inline'
+            script: 'get-content $(Build.SourcesDirectory)\terraform.tfvars.json' 
+      
+        - task: TerraformCLI@0
+          displayName: "terraform init"
+          enabled: true
+          inputs:
+            command: "init"
+            backendServiceArm: "Terraform_ServiceConnection"
+            allowTelemetryCollection: true
+            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'        
+        
+        - task: TerraformCLI@0
+          displayName: "terraform plan"
+          enabled: true
+          inputs:
+            command: 'plan'
+            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'
+            environmentServiceName: "Terraform_ServiceConnection"
+            commandOptions: '-out=tfplan'
+            allowTelemetryCollection: true
 
-  - template: ..\infra\Template\terraform_deploy.yml
-    parameters:
-      environment: "$(env)"
-      working_dir: "$(Build.SourcesDirectory)"
-      serviceconn_name : "Terraform_ServiceConnection"
-      project_name : "$(project)"          
+        - task: TerraformCLI@0
+          displayName: "terraform apply"
+          enabled: False
+          inputs:
+            command: 'apply'
+            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'
+            environmentServiceName: "Terraform_ServiceConnection"
+            commandOptions: 'tfplan'
+            allowTelemetryCollection: true
+          condition: and(succeeded(), eq(variables['TerraformApply'], 'True'))
+
+        - task: TerraformCLI@0
+          displayName: "terraform destroy"
+          enabled: False
+          inputs:
+            command: 'destroy'
+            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'
+            environmentServiceName: "Terraform_ServiceConnection"
+            allowTelemetryCollection: true
+          condition: and(succeeded(), eq(variables['TerraformDestroy'], 'True'))     
