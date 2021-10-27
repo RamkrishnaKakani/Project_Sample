@@ -10,9 +10,17 @@ resources:
       ref : master
 
 stages:
+  - stage: Infra_Import
+    displayName: Import Others
+    jobs:
+      - job: Import_Others
+        steps:
+        - checkout: self
+        - checkout: CMTeam
+
   - template: ..\infra\Template\terraform_deploy.yml
     parameters:
       environment: "$(env)"
-      working_dir: "$(Build.SourcesDirectory)/CMTeam/Infra"
+      working_dir: "$(Build.SourcesDirectory)"
       serviceconn_name : "Terraform_ServiceConnection"
       project_name : "$(project)"          
