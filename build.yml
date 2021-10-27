@@ -36,7 +36,7 @@ steps:
     PathtoPublish: '$(Build.SourcesDirectory)\build\zip\'
     ArtifactName: 'drop'
     publishLocation: 'Container'
-  condition: or(contains(variables['build.sourceBranch'], 'refs/heads/main'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
+  condition: or(contains(variables['build.sourceBranch'], 'refs/heads/master'), contains(variables['build.sourceBranch'], 'refs/heads/Development'))  
 
 - task: VSBuild@1
   inputs:
