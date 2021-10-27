@@ -25,7 +25,7 @@ stages:
             scriptLocation: 'inlineScript'
             inlineScript: |
               $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
-              $fileName = "$(env:Build_SourcesDirectory)\infra\terraform.tfvars.json"                
+              $fileName = "$(Build.SourcesDirectory)\infra\terraform.tfvars.json"                
               $data = @{}
               $apps = @{}
               $app = @{}
