@@ -3,7 +3,7 @@ pr: none
 
 resources:
   repositories:
-    - repository: Common
+    - repository: CMTeam
       type : github
       endpoint: MyGithubServiceConnection
       name: RamkrishnaKakani/CMTeam
@@ -16,7 +16,7 @@ stages:
       - job: Compile_Publish_job
         steps:
         - checkout: self
-        - checkout: Common
+        - checkout: CMTeam
 
   - template: ..\infra\Template\terraform_deploy.yml
     parameters:
