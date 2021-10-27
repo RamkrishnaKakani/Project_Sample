@@ -16,7 +16,7 @@ stages:
       - job: Infra_Creation
         steps:
         - checkout: self
-        - checkout: CMTeam
+        #- checkout: CMTeam
         - task: AzureCLI@2
           displayName: "Dymanic JSON Creation"
           inputs:
@@ -56,14 +56,14 @@ stages:
             command: "init"
             backendServiceArm: "Terraform_ServiceConnection"
             allowTelemetryCollection: true
-            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'        
+            workingDirectory: '$(Build.SourcesDirectory)\infra'        
         
         - task: TerraformCLI@0
           displayName: "terraform plan"
           enabled: true
           inputs:
             command: 'plan'
-            workingDirectory: '$(Build.SourcesDirectory)\$(dir)\infra'
+            workingDirectory: '$(Build.SourcesDirectory)\infra'
             environmentServiceName: "Terraform_ServiceConnection"
             commandOptions: '-out=tfplan'
             allowTelemetryCollection: true
