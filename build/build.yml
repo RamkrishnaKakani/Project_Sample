@@ -1,5 +1,27 @@
 trigger:
-- none
+  branches:
+    include:
+      - development
+      - master
+  paths:
+    include:
+     - Source/*
+    exclude:
+      - build/*
+      - infra/*
+      - deploy/*
+pr:
+  branches:
+    include:
+      - development
+      - master
+  paths:
+    include:
+     - Source/*
+    exclude:
+      - build/*
+      - infra/*
+      - deploy/*
 
 pool:
   vmImage: 'windows-latest'
