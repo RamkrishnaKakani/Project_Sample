@@ -5,7 +5,7 @@ trigger:
       - master
   paths:
     include:
-     - Source/*
+     - source/*
     exclude:
       - build/*
       - infra/*
@@ -17,7 +17,7 @@ pr:
       - master
   paths:
     include:
-     - Source/*
+     - source/*
     exclude:
       - build/*
       - infra/*
