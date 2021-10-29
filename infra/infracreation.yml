@@ -23,12 +23,6 @@ steps:
 - download: Project_Sample_Build
   artifact: 'drop'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(System.DefaultWorkingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-
 #- template: Template/terraform_deploy.yml
 #  enabled: false
 #  parameters:
