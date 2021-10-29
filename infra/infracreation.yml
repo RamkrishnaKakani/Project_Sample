@@ -30,4 +30,10 @@ steps:
 - download: Project_Sample_Build
   artifact: 'drop'
 
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
  
