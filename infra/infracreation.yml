@@ -14,11 +14,7 @@ resources:
   pipelines:
   - pipeline: Project_Sample_Build
     source: Project_Sample_Build
-    trigger: 
-      branches:
-        include: 
-        - master
-        - development      
+    trigger: true    
 
 steps:
 - checkout: self
