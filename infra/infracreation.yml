@@ -23,11 +23,10 @@ steps:
 - download: Project_Sample_Build
   artifact: 'drop'
 
-#- template: Template/terraform_deploy.yml
-#  enabled: false
-#  parameters:
-#    environment: "$(env)"
-#    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
-#    serviceconn_name : "Terraform_ServiceConnection"
-#    project_name : "$(project)" 
+- template: Template/terraform_deploy.yml
+  parameters:
+    environment: "$(env)"
+    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
+    serviceconn_name : "Terraform_ServiceConnection"
+    project_name : "$(project)" 
  
