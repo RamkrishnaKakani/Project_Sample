@@ -23,10 +23,17 @@ steps:
 - download: Project_Sample_Build
   artifact: 'drop'
 
-#- template: Template/terraform_deploy.yml
-#  parameters:
-#    environment: "$(env)"
-#    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
-#    serviceconn_name : "Terraform_ServiceConnection"
-#    project_name : "$(project)" 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Zip File'
+  inputs:
+    PathtoPublish: '$(Build.SourcesDirectory)/vProject_Sample_Build/drop'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+- template: Template/terraform_deploy.yml
+  parameters:
+    environment: "$(env)"
+    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
+    serviceconn_name : "Terraform_ServiceConnection"
+    project_name : "$(project)" 
  
