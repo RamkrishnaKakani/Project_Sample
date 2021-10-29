@@ -26,7 +26,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Zip File'
   inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)/vProject_Sample_Build/drop'
+    PathtoPublish: '$(Build.SourcesDirectory)/Project_Sample_Build/drop'
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
