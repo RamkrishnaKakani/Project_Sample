@@ -25,14 +25,15 @@ steps:
 
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    PathtoPublish: '$(System.DefaultWorkingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
 
-- template: Template/terraform_deploy.yml
-  parameters:
-    environment: "$(env)"
-    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
-    serviceconn_name : "Terraform_ServiceConnection"
-    project_name : "$(project)" 
+#- template: Template/terraform_deploy.yml
+#  enabled: false
+#  parameters:
+#    environment: "$(env)"
+#    working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
+#    serviceconn_name : "Terraform_ServiceConnection"
+#    project_name : "$(project)" 
  
