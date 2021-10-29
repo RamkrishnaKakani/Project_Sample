@@ -1,27 +1,7 @@
 trigger:
-  branches:
-    include:
-      - development
-      - master
-  paths:
-    include:
-     - source/*
-    exclude:
-      - build/*
-      - infra/*
-      - deploy/*
+  - none
 pr:
-  branches:
-    include:
-      - development
-      - master
-  paths:
-    include:
-     - source/*
-    exclude:
-      - build/*
-      - infra/*
-      - deploy/*
+  - none
 
 resources:
   repositories:
