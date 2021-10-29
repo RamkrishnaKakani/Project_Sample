@@ -1,5 +1,27 @@
-trigger: none
-pr: none
+trigger:
+  branches:
+    include:
+      - development
+      - master
+  paths:
+    include:
+     - source/*
+    exclude:
+      - build/*
+      - infra/*
+      - deploy/*
+pr:
+  branches:
+    include:
+      - development
+      - master
+  paths:
+    include:
+     - source/*
+    exclude:
+      - build/*
+      - infra/*
+      - deploy/*
 
 resources:
   repositories:
