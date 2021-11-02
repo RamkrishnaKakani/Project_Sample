@@ -52,8 +52,16 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
 
 - task: PublishBuildArtifacts@1
+  enabled: false
   displayName: Publish zip file
   inputs:
     PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- task: PublishPipelineArtifact@1
+  displayName: Publish zip file
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
+    artifact: 'drop'
+    publishLocation: 'pipeline'
