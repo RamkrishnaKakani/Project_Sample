@@ -20,13 +20,21 @@ steps:
 #- checkout: self
 #- checkout: CMTeam
 
-- download: Project_Sample_Build
-  artifact: 'drop'
+#- download: Project_Sample_Build
+#  artifact: 'drop'
   
-- task: PublishPipelineArtifact@1
-  enabled: false
+- task: DownloadPipelineArtifact@2
   inputs:
-    targetPath: '$(Pipeline.Workspace)'
+    buildType: 'specific'
+    project: '726985fd-b209-4af8-b565-720a49aa5497'
+    definition: '31'
+    buildVersionToDownload: 'latest'
+    artifactName: 'drop'
+    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
     artifact: 'drop'
     publishLocation: 'pipeline'
  
