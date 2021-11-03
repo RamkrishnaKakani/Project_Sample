@@ -30,6 +30,8 @@ variables:
   env : 'dev'
   project : 'todobyram'
   version : '001'
+  TerraformApply : True
+  TerraformDestroy : False
 
   ${{ if eq(variables['Build.Reason'], 'Manually Triggered') }}:
     TerraformDestroy : True
