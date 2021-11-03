@@ -82,6 +82,9 @@ stages:
       vmImage: 'ubuntu-latest'  
 
     steps:    
+    - checkout: self
+      displayName : 'Download OG Repo'
+
     - checkout: CMTeam
       displayName : 'Download Infra Repo'
 
