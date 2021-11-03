@@ -3,13 +3,10 @@ trigger:
     include:
       - development
       - master
+      - feature_*
   paths:
     include:
      - source/*
-    exclude:
-      - build/*
-      - infra/*
-      - deploy/*
 pr:
   branches:
     include:
@@ -20,54 +17,79 @@ pr:
   paths:
     include:
      - source/*
-    exclude:
-      - build/*
-      - infra/*
-      - deploy/*
 
+resources:
+  repositories:
+    - repository: CMTeam
+      type : github
+      endpoint: MyGithubServiceConnection
+      name: RamkrishnaKakani/CMTeam
+      ref : master
+      
 variables:
   solution: '**/HelloWorld.sln'
+  env : 'dev'
+  project : 'todobyram'
+  version : '001'
 
-steps:
-- task: NuGetToolInstaller@1
+  ${{ if and( ne(variables['Build.Reason'], 'Manually Triggered')) }}:
+    TerraformDestroy : True
+    TerraformApply : False
 
-- task: NuGetCommand@2
-  displayName: 'Run Nuget Restore'
-  inputs:
-    command: 'restore'
-    restoreSolution: '$(solution)'
+stages:
+- stage: DotNetCompliation
+  pool:
+    vmImage: 'windows-latest'
+  jobs:
+  - job :
+    steps:
+    - task: NuGetToolInstaller@1
+    - task: NuGetCommand@2
+      displayName: 'Run Nuget Restore'
+      inputs:
+        command: 'restore'
+        restoreSolution: '$(solution)'
 
-- task: DotNetCoreCLI@2
-  displayName: Publish Solution
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    projects: $(solution)
-    arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\Project_Sample -v d'
-    modifyOutputPath: false
-    zipAfterPublish: true
-    workingDirectory: '$(Build.SourcesDirectory)'
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+    - task: DotNetCoreCLI@2
+      displayName: Publish Solution
+      inputs:
+        command: 'publish'
+        publishWebProjects: true
+        projects: $(solution)
+        arguments: '--configuration Release /p:DebugType=None /p:DebugSymbols=false --output $(Build.SourcesDirectory)\build\zip\Project_Sample -v d'
+        modifyOutputPath: false
+        zipAfterPublish: true
+        workingDirectory: '$(Build.SourcesDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: Publish zip file
+      inputs:
+        PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
     
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: 'Write-Host "##vso[build.addbuildtag]trigger"'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+  
 
-- task: PublishBuildArtifacts@1
-  enabled: false
-  displayName: Publish zip file
-  inputs:
-    PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+- stage: Infra
+  jobs:
+  - job :
+    pool:
+      vmImage: 'ubuntu-latest'  
 
-- task: PublishPipelineArtifact@1
-  displayName: Publish zip file
-  inputs:
-    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
-    artifact: 'drop'
-    publishLocation: 'pipeline'
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+    steps:    
+    - checkout: CMTeam
+      displayName : 'Download Infra Repo'
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: 'Write-Host "##vso[build.addbuildtag]trigger"'
-  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+    - template: ../infra/Template/terraform_deploy.yml
+      parameters:
+        environment: "$(env)"
+        working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
+        serviceconn_name : "Terraform_ServiceConnection"
+        project_name : "$(project)"
+        version : "$(version)"    
