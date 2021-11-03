@@ -39,9 +39,7 @@ steps:
       $data.Add("apps", $apps)
       $data | ConvertTo-Json | Out-File -Path $fileName      
       #$data | ConvertTo-Json | set-content -Path $fileName
-      
-    addSpnToEnvironment: true
-    useGlobalConfig: true
+
     addSpnToEnvironment: true
     useGlobalConfig: true
         
