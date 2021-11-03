@@ -19,24 +19,29 @@ steps:
     scriptType: 'pscore'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      $appPlan = az appservice plan list --query "[?tags.env=='$(env)']" | ConvertFrom-Json
-      $fileName = "${{ parameters.working_dir }}\terraform.tfvars.json"                
+      $fileName = "${{ parameters.working_dir }}\terraform.tfvars.json" 
+      if($fileName -like "*Env*")
+      { break  }
+      $appPlan = az appservice plan list --query "[?tags.env=='${{ parameters.environment }}']" | ConvertFrom-Json
+                     
       $data = @{}
       $apps = @{}
       $app = @{}
                 
-      $app.Add("app_name","$(project)")
-      $app.Add("version","$(version)")
+      $app.Add("app_name","${{ parameters.project_name}}")
+      $app.Add("version","001")
       $apps.Add("app",$app)
-
       $data.Add("id", $appPlan.id )
       $data.Add("resourceGroup", $appPlan.resourceGroup )
       $data.Add("location", $appPlan.location.replace(' ','') )
       $data.Add("tags", $appPlan.tags)
-      $data.Add("env", "$(env)")
+      $data.Add("env", "${{ parameters.environment }}")
       $data.Add("apps", $apps)
-
-      $data | ConvertTo-Json | set-content -Path $fileName
+      $data | ConvertTo-Json | Out-File -Path $fileName      
+      #$data | ConvertTo-Json | set-content -Path $fileName
+      
+    addSpnToEnvironment: true
+    useGlobalConfig: true
     addSpnToEnvironment: true
     useGlobalConfig: true
         
