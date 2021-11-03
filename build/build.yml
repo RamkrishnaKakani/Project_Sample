@@ -32,7 +32,7 @@ variables:
   version : '001'
   TerraformApply : True
 
-  ${{ if in(variables['Build.Reason'], 'Manually Triggered') }}:
+  ${{ if in(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
 
@@ -77,10 +77,22 @@ stages:
         script: 'Write-Host "##vso[build.addbuildtag]trigger"'
       condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
-    - task: PowerShell@2
-      displayName: 'Try1'
-      inputs:
-        targetType: 'inline'
-        script: 'Write-Host "Hello"'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'Manually Triggered'))
-    
+- stage: Infra
+  jobs:
+  - job :
+    pool:
+      vmImage: 'ubuntu-latest'  
+
+    steps:    
+    - checkout: self
+      displayName : 'Download OG Repo'
+
+    - checkout: CMTeam
+      displayName : 'Download Infra Repo'
+
+    - template: ../infra/Template/terraform_deploy.yml
+      parameters:
+        environment: "$(env)"
+        working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
+        serviceconn_name : "Terraform_ServiceConnection"
+        project_name : "$(project)"
