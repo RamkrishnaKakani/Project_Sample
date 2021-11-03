@@ -47,6 +47,8 @@ steps:
     modifyOutputPath: false
     zipAfterPublish: true
     workingDirectory: '$(Build.SourcesDirectory)'
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+    
 
 - task: PublishBuildArtifacts@1
   enabled: false
@@ -62,3 +64,10 @@ steps:
     targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
     artifact: 'drop'
     publishLocation: 'pipeline'
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'Write-Host "##vso[build.addbuildtag]trigger"'
+  condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
