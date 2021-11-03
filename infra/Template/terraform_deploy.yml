@@ -37,8 +37,8 @@ steps:
       $data.Add("tags", $appPlan.tags)
       $data.Add("env", "${{ parameters.environment }}")
       $data.Add("apps", $apps)
-      $data | ConvertTo-Json | Out-File -Path $fileName      
-      #$data | ConvertTo-Json | set-content -Path $fileName
+      #$data | ConvertTo-Json | Out-File -Path $fileName      
+      $data | ConvertTo-Json | set-content -Path $fileName
 
     addSpnToEnvironment: true
     useGlobalConfig: true
