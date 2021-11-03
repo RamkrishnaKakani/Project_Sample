@@ -11,10 +11,10 @@ resources:
       name: RamkrishnaKakani/CMTeam
       ref : master
 
-  pipelines:
-  - pipeline: Project_Sample_Build
-    source: Project_Sample_Build
-    trigger: true    
+  #pipelines:
+  #- pipeline: Project_Sample_Build
+  #  source: Project_Sample_Build
+  #  trigger: true    
 
 steps:
 #- checkout: self
