@@ -30,11 +30,13 @@ variables:
   env : 'dev'
   project : 'todobyram'
   version : '001'
-  TerraformApply : True
-
   ${{ if in(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
+
+  ${{ if ne(variables['Build.Reason'], 'Manual') }}:
+    TerraformDestroy : False
+    TerraformApply : True  
 
 stages:
 - stage: DotNetCompliation
