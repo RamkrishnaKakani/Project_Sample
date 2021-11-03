@@ -25,9 +25,6 @@ pr:
       - infra/*
       - deploy/*
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   solution: '**/HelloWorld.sln'
 
