@@ -3,7 +3,6 @@ trigger:
     include:
       - development
       - master
-      - feature_*
   paths:
     include:
      - source/*
@@ -32,7 +31,7 @@ variables:
   project : 'todobyram'
   version : '001'
 
-  ${{ if and( ne(variables['Build.Reason'], 'Manually Triggered')) }}:
+  ${{ if eq(variables['Build.Reason'], 'Manually Triggered') }}:
     TerraformDestroy : True
     TerraformApply : False
 
@@ -92,4 +91,3 @@ stages:
         working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
         serviceconn_name : "Terraform_ServiceConnection"
         project_name : "$(project)"
-        version : "$(version)"    
