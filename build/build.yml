@@ -30,13 +30,13 @@ variables:
   env : 'dev'
   project : 'todobyram'
   version : '001'
-  ${{ if in(variables['Build.Reason'], 'Manual') }}:
-    TerraformDestroy : True
-    TerraformApply : False
+  #${{ if in(variables['Build.Reason'], 'Manual') }}:
+  #  TerraformDestroy : True
+  #  TerraformApply : False
 
-  ${{ if ne(variables['Build.Reason'], 'Manual') }}:
-    TerraformDestroy : False
-    TerraformApply : True  
+  #${{ if ne(variables['Build.Reason'], 'Manual') }}:
+  #  TerraformDestroy : False
+  #  TerraformApply : True  
 
 stages:
 - stage: DotNetCompliation
@@ -86,13 +86,10 @@ stages:
       vmImage: 'ubuntu-latest'  
 
     steps:    
-    - checkout: self
-      displayName : 'Download OG Repo'
-
     - checkout: CMTeam
       displayName : 'Download Infra Repo'
 
-    - template: ../infra/Template/terraform_deploy.yml
+    - template: ../infra/Template/terraform_deploy.yml@CMTeam
       parameters:
         environment: "$(env)"
         working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
