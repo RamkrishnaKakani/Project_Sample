@@ -98,3 +98,7 @@ stages:
         working_dir: "$(Build.SourcesDirectory)/infra"
         serviceconn_name : "Terraform_ServiceConnection"
         project_name : "$(project)"
+        tfresourcegroupname : "demo-rg"
+        tfstorageaccountname : "backendpoc"
+        azureRmContainerName : "poccontainer"
+        tfstatefile : "try2.tfstate"
