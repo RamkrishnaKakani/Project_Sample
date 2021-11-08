@@ -101,4 +101,4 @@ stages:
         tfresourcegroupname : "demo-rg"
         tfstorageaccountname : "backendpoc"
         azureRmContainerName : "poccontainer"
-        tfstatefile : "ProjectSample1.tfstate"
+        tfstatefile : "$(project)_$(env).tfstate"
