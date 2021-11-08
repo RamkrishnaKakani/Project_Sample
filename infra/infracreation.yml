@@ -4,6 +4,7 @@ trigger:
       - development
       - master
       - poc
+      - try1
   paths:
     include:
      - source/*
