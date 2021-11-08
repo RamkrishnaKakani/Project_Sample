@@ -30,6 +30,7 @@ variables:
   env : 'Dev'
   project : 'todobyram'
   version : '001'
+
   ${{ if eq(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
@@ -87,7 +88,6 @@ stages:
   - job :
     pool:
       vmImage: 'ubuntu-latest'  
-
     steps:    
     - checkout: CMTeam
       displayName : 'Download Infra Repo'
