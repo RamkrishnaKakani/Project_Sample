@@ -1,24 +1,3 @@
-trigger:
-  branches:
-    include:
-      - development
-      - master
-      - poc
-      - try1
-  paths:
-    include:
-     - source/*
-pr:
-  branches:
-    include:
-      - development
-      - master
-      - Feature_*
-      - feature_*
-  paths:
-    include:
-     - source/*
-
 resources:
   repositories:
     - repository: CMTeam
