@@ -30,9 +30,9 @@ variables:
   env : 'Dev'
   project : 'todobyram'
   version : '001'
-  TerraformDestroy : False
-  TerraformApply : True  
-
+  ${{ if ne(variables['Build.Reason'], 'Manual') }}:
+    TerraformDestroy : False
+    TerraformApply : True  
   ${{ if eq(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
