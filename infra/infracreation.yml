@@ -1,7 +1,21 @@
 trigger:
-  - none
+  branches:
+    include:
+      - development
+      - master
+  paths:
+    include:
+     - source/*
 pr:
-  - none
+  branches:
+    include:
+      - development
+      - master
+      - Feature_*
+      - feature_*
+  paths:
+    include:
+     - source/*
 
 resources:
   repositories:
@@ -10,31 +24,20 @@ resources:
       endpoint: MyGithubServiceConnection
       name: RamkrishnaKakani/CMTeam
       ref : master
+      
+variables:
+  env : 'Dev'
+  project : 'todobyram'
+  TerraformDestroy : False
+  TerraformApply : True
 
-  #pipelines:
-  #- pipeline: Project_Sample_Build
-  #  source: Project_Sample_Build
-  #  trigger: true    
+steps:    
+- checkout: CMTeam
+  displayName : 'Download Infra Repo'
 
-steps:
-#- checkout: self
-#- checkout: CMTeam
-
-#- download: Project_Sample_Build
-#  artifact: 'drop'
-  
-- task: DownloadPipelineArtifact@2
-  inputs:
-    buildType: 'specific'
-    project: '726985fd-b209-4af8-b565-720a49aa5497'
-    definition: '31'
-    buildVersionToDownload: 'latest'
-    artifactName: 'drop'
-    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
-    artifact: 'drop'
-    publishLocation: 'pipeline'
- 
+- template: infra/Template/terraform_deploy.yml@CMTeam
+  parameters:
+    environment: "$(env)"
+    working_dir: "$(Build.SourcesDirectory)/infra"
+    serviceconn_name : "Terraform_ServiceConnection"
+    project_name : "$(project)"
