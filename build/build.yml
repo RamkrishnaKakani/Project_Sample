@@ -30,7 +30,7 @@ variables:
   env : 'Dev'
   project : 'todobyram'
   version : '001'
-  ${{ if in(variables['Build.Reason'], 'Manual') }}:
+  ${{ if eq(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
   ${{ if ne(variables['Build.Reason'], 'Manual') }}:
@@ -45,11 +45,15 @@ stages:
   - job :
     steps:
     - task: NuGetToolInstaller@1
+      displayName: 'Install Dependancies'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+
     - task: NuGetCommand@2
       displayName: 'Run Nuget Restore'
       inputs:
         command: 'restore'
         restoreSolution: '$(solution)'
+      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
     - task: DotNetCoreCLI@2
       displayName: Publish Solution
@@ -91,6 +95,6 @@ stages:
     - template: infra/Template/terraform_deploy.yml@CMTeam
       parameters:
         environment: "Dev"
-        working_dir: "$(Build.SourcesDirectory)/infra"
+        working_dir: "$(Build.SourcesDirectory)/CMTeam/infra"
         serviceconn_name : "Terraform_ServiceConnection"
         project_name : "$(project)"
