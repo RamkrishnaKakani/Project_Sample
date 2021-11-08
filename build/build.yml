@@ -30,13 +30,13 @@ variables:
   env : 'Dev'
   project : 'todobyram'
   version : '001'
+  TerraformDestroy : False
+  TerraformApply : True  
 
   ${{ if eq(variables['Build.Reason'], 'Manual') }}:
     TerraformDestroy : True
     TerraformApply : False
-  ${{ if ne(variables['Build.Reason'], 'Manual') }}:
-    TerraformDestroy : False
-    TerraformApply : True  
+
 
 stages:
 - stage: DotNetCompliation
@@ -94,7 +94,7 @@ stages:
 
     - template: infra/Template/terraform_deploy.yml@CMTeam
       parameters:
-        environment: "Dev"
+        environment: "$(env)"
         working_dir: "$(Build.SourcesDirectory)/infra"
         serviceconn_name : "Terraform_ServiceConnection"
         project_name : "$(project)"
