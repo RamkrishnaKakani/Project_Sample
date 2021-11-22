@@ -74,5 +74,5 @@ stages:
         vstsFeedPublish: '726985fd-b209-4af8-b565-720a49aa5497/6aa1bc76-ebeb-4bb3-b223-c17426a42ea2'
         vstsFeedPackagePublish: 'zip'
         versionOption: 'custom'
-        versionPublish: '0.0.1'
+        versionPublish: '0.0.2'
         packagePublishDescription: 'POC To Publish To Azure Feed'
