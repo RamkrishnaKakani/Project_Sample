@@ -81,9 +81,9 @@ stages:
     - task: UniversalPackages@0
       inputs:
         command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
+        publishDirectory: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
         feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'Demo1/Feed_2'
+        vstsFeedPublish: 'Demo1/Feed_POC'
         vstsFeedPackagePublish: 'zip'
         versionOption: 'custom'
         versionPublish: '0.0.2'
