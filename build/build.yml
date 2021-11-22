@@ -77,12 +77,3 @@ stages:
         versionOption: 'custom'
         versionPublish: '0.0.2'
         packagePublishDescription: 'POC To Publish To Azure Feed'
-
-    - task: UniversalPackages@0
-      inputs:
-        command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        feedsToUse: 'internal'
-        vstsFeed: 'Feed_2'
-        vstsFeedPackage: 'zips'
-        vstsPackageVersion: '0.0.1'
