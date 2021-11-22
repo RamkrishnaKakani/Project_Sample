@@ -83,7 +83,7 @@ stages:
         command: 'publish'
         publishDirectory: '$(Build.ArtifactStagingDirectory)'
         feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'RamkrishnaKakani/Feed_2'
+        vstsFeedPublish: 'Demo1/Feed_2'
         vstsFeedPackagePublish: 'zip'
         versionOption: 'custom'
         versionPublish: '0.0.2'
