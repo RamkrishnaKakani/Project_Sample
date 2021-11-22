@@ -67,6 +67,7 @@ stages:
       #condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
     - task: UniversalPackages@0
+      enabled: false
       inputs:
         command: 'publish'
         publishDirectory: '$(Build.ArtifactStagingDirectory)'
@@ -76,3 +77,13 @@ stages:
         versionOption: 'custom'
         versionPublish: '0.0.2'
         packagePublishDescription: 'POC To Publish To Azure Feed'
+
+    - task: UniversalPackages@0
+      inputs:
+        command: 'publish'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
+        feedsToUsePublish: 'internal'
+        vstsFeedPublish: 'Feed_2'
+        vstsFeedPackagePublish: 'zips'
+        versionOption: 'custom'
+        versionPublish: '0.0.1'
