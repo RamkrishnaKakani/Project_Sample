@@ -82,9 +82,7 @@ stages:
       inputs:
         command: 'publish'
         publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        feedsToUsePublish: 'internal'
-        #vstsFeedPublish: 'Feed_2'
+        feedsToUse: 'internal'
         vstsFeed: 'Feed_2'
-        vstsFeedPackagePublish: 'zips'
-        versionOption: 'custom'
-        versionPublish: '0.0.1'
+        vstsFeedPackage: 'zips'
+        vstsPackageVersion: '0.0.1'
