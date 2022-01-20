@@ -74,7 +74,7 @@ stages:
         modifyOutputPath: false
         zipAfterPublish: true
         workingDirectory: '$(Build.SourcesDirectory)'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+      #condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
     - task: PublishBuildArtifacts@1
       displayName: Publish zip file
@@ -82,7 +82,7 @@ stages:
         PathtoPublish: '$(Build.SourcesDirectory)\build\zip\Project_Sample'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-      condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
+      #condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
     
     - task: PowerShell@2
       enabled: false
