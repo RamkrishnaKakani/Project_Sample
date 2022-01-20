@@ -17,13 +17,13 @@ pr:
     include:
      - source/*
 
-resources:
-  repositories:
-    - repository: CMTeam
-      type : github
-      endpoint: MyGithubServiceConnection
-      name: RamkrishnaKakani/CMTeam
-      ref : master
+# resources:
+#   repositories:
+#     - repository: CMTeam
+#       type : github
+#       endpoint: MyGithubServiceConnection
+#       name: RamkrishnaKakani/CMTeam
+#       ref : master
       
 variables:
   projectSearchPath: '$(Build.SourcesDirectory)/source/HelloWorld'
