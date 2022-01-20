@@ -26,6 +26,7 @@ resources:
       ref : master
       
 variables:
+  projectSearchPath: '$(Build.SourcesDirectory)/source/HelloWorld'
   solution: '**/HelloWorld.sln'
   env : 'Dev'
   project : 'todobyram'
@@ -53,6 +54,13 @@ stages:
       displayName: 'Run Nuget Restore'
       inputs:
         command: 'restore'
+        restoreSolution: '$(projectSearchPath)/*.sln'
+
+    - task: NuGetCommand@2
+      enabled: false
+      displayName: 'Run Nuget Restore'
+      inputs:
+        command: 'restore'
         restoreSolution: '$(solution)'
       condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
@@ -77,28 +85,29 @@ stages:
       condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
     
     - task: PowerShell@2
+      enabled: false
       displayName: 'Trigger For Release Pipline'
       inputs:
         targetType: 'inline'
         script: 'Write-Host "##vso[build.addbuildtag]trigger"'
       condition: and(succeeded(), in(variables['Build.Reason'], 'IndividualCI', 'PullRequest'))
 
-- stage: Infra
-  jobs:
-  - job :
-    pool:
-      vmImage: 'ubuntu-latest'  
-    steps:    
-    - checkout: CMTeam
-      displayName : 'Download Infra Repo'
+# - stage: Infra
+#   jobs:
+#   - job :
+#     pool:
+#       vmImage: 'ubuntu-latest'  
+#     steps:    
+#     - checkout: CMTeam
+#       displayName : 'Download Infra Repo'
 
-    - template: infra/Template/terraform_deploy.yml@CMTeam
-      parameters:
-        environment: "$(env)"
-        working_dir: "$(Build.SourcesDirectory)/infra"
-        serviceconn_name : "Terraform_ServiceConnection"
-        project_name : "$(project)"
-        tfresourcegroupname : "demo-rg"
-        tfstorageaccountname : "backendpoc"
-        azureRmContainerName : "poccontainer"
-        tfstatefile : "$(project)_$(env).tfstate"
+#     - template: infra/Template/terraform_deploy.yml@CMTeam
+#       parameters:
+#         environment: "$(env)"
+#         working_dir: "$(Build.SourcesDirectory)/infra"
+#         serviceconn_name : "Terraform_ServiceConnection"
+#         project_name : "$(project)"
+#         tfresourcegroupname : "demo-rg"
+#         tfstorageaccountname : "backendpoc"
+#         azureRmContainerName : "poccontainer"
+#         tfstatefile : "$(project)_$(env).tfstate"
