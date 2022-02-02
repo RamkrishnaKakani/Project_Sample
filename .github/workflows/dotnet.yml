@@ -24,5 +24,5 @@ jobs:
       run: |
         #dotnet build --no-restore
         dotnet build --configuration Release --no-restore
-        dotnet publish -c Release -o ../My-webapp -r linux-x64 --self-contained true /p:UseAppHost=true
+        dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false --output ../My-WebApp -v d
       working-directory: source/
