@@ -22,11 +22,9 @@ jobs:
       
     - name: Build
       run: |
-        #dotnet build --no-restore
         dotnet build --configuration Release --no-restore
         #dotnet build --configuration Release --no-restore /p:PackageLocation="../My-WebApp" /p:OutDir="../My-WebApp" /p:platform="Any CPU"
-        #dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false /p:PublishArtifact=true --output ../My-WebApp -v d
-        dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false --output ../My-WebApp -v d
+        dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false /p:PublishArtifact=true --output ../My-WebApp -v d
       working-directory: source/
       
     - name: Upload a Build Artifact
