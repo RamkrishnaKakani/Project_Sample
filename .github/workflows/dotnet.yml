@@ -7,8 +7,7 @@ on:
 
 jobs:
   build:  
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest    
     steps:
     - uses: actions/checkout@v2
     
@@ -23,7 +22,8 @@ jobs:
       
     - name: Build
       run: dotnet build --configuration Release --no-restore /p:PackageLocation="../My-WebApp" /p:OutDir="../My-WebApp" /p:platform="Any CPU"
-    
+      working-directory: source/
+      
     - name: Publish
       run: dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false /p:PublishArtifact=true --output ../My-WebApp -v d
       working-directory: source/
