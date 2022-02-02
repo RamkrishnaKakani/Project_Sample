@@ -1,11 +1,11 @@
 name: .NET
 
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:  
+  
     runs-on: ubuntu-latest
     
     steps:
@@ -20,14 +20,16 @@ jobs:
       run: dotnet restore
       working-directory: source/
       
-    - name: Build
-      run: |
-        dotnet build --configuration Release --no-restore /p:PackageLocation="../My-WebApp" /p:OutDir="../My-WebApp" /p:platform="Any CPU"
-        dotnet publish --configuration Release -r win-x64 --self-contained true /p:DebugType=None /p:DebugSymbols=false /p:PublishArtifact=true --output ../My-WebApp -v d
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
       working-directory: source/
-      
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.3.1
+
+    - name: dotnet publish
+      run: dotnet publish -c Release -o source/myapp
+      working-directory: source/
+
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
       with:
         name: My-WebApp
-        path: source/My-WebApp 
+        path: source/myapp
