@@ -134,5 +134,5 @@ stages:
         azureSubscription: 'Terraform_ServiceConnection'
         appType: 'webApp'
         WebAppName: 'demowebappfromram'
-        packageForLinux: '$(System.ArtifactsDirectory)\*.zip'
+        packageForLinux: '$(System.ArtifactsDirectory)\drop/Project_Sample.zip'
     
