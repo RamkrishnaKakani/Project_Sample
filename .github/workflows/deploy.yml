@@ -1,7 +1,7 @@
 name: Build and Deploy 
 
 env:
-  AZURE_WEBAPP_NAME: myfirstwebappbyram   
+  AZURE_WEBAPP_NAME: demowebappfromram 
   AZURE_WEBAPP_PACKAGE_PATH: '.'      
   DOTNET_VERSION: '5.0.x'                 
 
