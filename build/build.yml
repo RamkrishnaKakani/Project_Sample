@@ -111,3 +111,19 @@ stages:
 #         tfstorageaccountname : "backendpoc"
 #         azureRmContainerName : "poccontainer"
 #         tfstatefile : "$(project)_$(env).tfstate"
+
+- stage: Deployment
+  dependsOn: DotNetCompliation
+  pool:
+    vmImage: 'windows-latest'
+  jobs:
+  - job :
+    steps:
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        azureSubscription: 'Terraform_ServiceConnection'
+        appType: 'webApp'
+        WebAppName: 'demowebappfromram'
+        packageForLinux: '$(Build.SourcesDirectory)\build\zip\Project_Sample\*.zip'
+    
